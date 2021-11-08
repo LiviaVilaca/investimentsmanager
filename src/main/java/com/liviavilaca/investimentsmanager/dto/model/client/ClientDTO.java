@@ -3,6 +3,7 @@ package com.liviavilaca.investimentsmanager.dto.model.client;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.liviavilaca.investimentsmanager.enumeration.RoleEnum;
 import com.liviavilaca.investimentsmanager.util.security.BcryptUtil;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -47,6 +50,9 @@ public class ClientDTO {
     private String name;
 
     private Integer age;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private RoleEnum role;
 
     public String getPassword() {
         return BcryptUtil.getHash(this.password);

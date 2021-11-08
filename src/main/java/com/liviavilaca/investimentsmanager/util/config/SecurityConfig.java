@@ -5,6 +5,7 @@ import com.liviavilaca.investimentsmanager.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -56,9 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("/api/v1/auth/**",
-                        "/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**", "/manage/**")
-                .permitAll().anyRequest().authenticated();
+                .and().authorizeRequests()
+                .antMatchers("/manage/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/api/v1/auth/**", "/v2/api-docs", "/swagger-resources/**", "/swagger-ui/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/companies", "/api/v1/clients").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT,"/api/v1/companies/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/api/v1/**").hasAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated();
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

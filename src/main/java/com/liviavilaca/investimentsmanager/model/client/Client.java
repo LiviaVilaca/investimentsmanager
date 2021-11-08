@@ -1,11 +1,13 @@
 package com.liviavilaca.investimentsmanager.model.client;
 
+import com.liviavilaca.investimentsmanager.enumeration.RoleEnum;
 import com.liviavilaca.investimentsmanager.model.acquisition.Acquisition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
 import java.util.List;
 
@@ -34,6 +36,13 @@ public class Client {
 
     private Integer age;
 
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role = RoleEnum.ROLE_USER;
+
     @OneToMany(mappedBy = "client", targetEntity = Acquisition.class, fetch = FetchType.LAZY,  orphanRemoval = true)
     private List<Acquisition> acquisitions;
+
+    public boolean isAdmin() {
+        return RoleEnum.ROLE_ADMIN.toString().equals(this.role.toString());
+    }
 }
