@@ -79,10 +79,15 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.google.guava</groupId>-->
+<!--			<artifactId>guava</artifactId>-->
+<!--			<version>27.0.1-jre</version>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>com.github.thibaultmeyer</groupId>
-			<artifactId>partialize</artifactId>
-			<version>release~20.05</version>
+			<groupId>com.github.dpaukov</groupId>
+			<artifactId>combinatoricslib3</artifactId>
+			<version>3.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

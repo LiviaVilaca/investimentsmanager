@@ -42,7 +42,8 @@ public class AcquisitionController {
     @PostMapping
     @ApiOperation(value = "Route to acquire Actions for a Client in the API", produces = "application/json")
     public ResponseEntity<ResponseEntityDTO<AcquisitionDTO>> acquiredActions (@PathVariable Long id,
-                                                                              @RequestParam @NotNull @ApiParam(value = "The total amount to acquire actions") Double totalAmount) throws EntityNotFoundException {
+                                                                              @RequestParam @NotNull @ApiParam(value = "The total amount to acquire actions") Double totalAmount,
+                                                                              @RequestParam(required = false) @ApiParam(value = "The total number of companies for which to acquire actions") Integer totalCompanies) throws EntityNotFoundException {
 
         ResponseEntityDTO<ClientDTO> clientResponse = this.clientService.findById(id);
         /**
@@ -50,7 +51,11 @@ public class AcquisitionController {
          */
         List<CompanyDTO> activeCompanies = (List<CompanyDTO>) this.companyService.findByStatusActiveOrderByPriceAsc().getData();
 
-        List<ActionDTO> actions = AcquireActionUtil.distributeActionsByAllCompanies(totalAmount, activeCompanies);
+        List<ActionDTO> actions;
+        if(totalCompanies != null)
+            actions = AcquireActionUtil.distributeActionsByCompanies(totalAmount, totalCompanies, activeCompanies);
+        else
+            actions = AcquireActionUtil.distributeActionsByAllCompanies(totalAmount, activeCompanies);
 
         Double totalSpent = actions.stream().mapToDouble(action -> action.getTotalSpent()).sum();
 
