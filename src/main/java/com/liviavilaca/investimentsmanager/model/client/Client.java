@@ -1,6 +1,6 @@
 package com.liviavilaca.investimentsmanager.model.client;
 
-import com.liviavilaca.investimentsmanager.model.action.Action;
+import com.liviavilaca.investimentsmanager.model.acquisition.Acquisition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +34,6 @@ public class Client {
 
     private Integer age;
 
-    @OneToMany(mappedBy = "client", targetEntity = Action.class, fetch = FetchType.LAZY,  orphanRemoval = true)
-    private List<Action> actions;
+    @OneToMany(mappedBy = "client", targetEntity = Acquisition.class, fetch = FetchType.LAZY,  orphanRemoval = true)
+    private List<Acquisition> acquisitions;
 }

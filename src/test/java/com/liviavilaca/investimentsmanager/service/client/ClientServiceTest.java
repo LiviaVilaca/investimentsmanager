@@ -1,5 +1,4 @@
 package com.liviavilaca.investimentsmanager.service.client;
-
 import com.liviavilaca.investimentsmanager.dto.mapper.client.ClientMapper;
 import com.liviavilaca.investimentsmanager.dto.model.client.ClientDTO;
 import com.liviavilaca.investimentsmanager.dto.response.MessageResponseDTO;
@@ -18,9 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientServiceTest {

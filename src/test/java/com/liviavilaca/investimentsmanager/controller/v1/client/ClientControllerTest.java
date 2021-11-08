@@ -1,18 +1,10 @@
 package com.liviavilaca.investimentsmanager.controller.v1.client;
 
-import com.liviavilaca.investimentsmanager.dto.model.action.ActionDTO;
 import com.liviavilaca.investimentsmanager.dto.model.client.ClientDTO;
-import com.liviavilaca.investimentsmanager.dto.model.company.CompanyDTO;
-import com.liviavilaca.investimentsmanager.dto.response.ActionsAcquiredResponseDTO;
 import com.liviavilaca.investimentsmanager.dto.response.ResponseEntityDTO;
 import com.liviavilaca.investimentsmanager.exception.EntityNotFoundException;
-import com.liviavilaca.investimentsmanager.service.action.ActionService;
 import com.liviavilaca.investimentsmanager.service.client.ClientService;
-import com.liviavilaca.investimentsmanager.service.company.CompanyService;
-import com.liviavilaca.investimentsmanager.util.action.ActionUtils;
 import com.liviavilaca.investimentsmanager.util.client.ClientUtils;
-import com.liviavilaca.investimentsmanager.util.company.CompanyUtils;
-import com.liviavilaca.investimentsmanager.util.security.BcryptUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,10 +36,6 @@ public class ClientControllerTest {
 
     @Mock
     private ClientService clientService;
-    @Mock
-    private ActionService actionService;
-    @Mock
-    private CompanyService companyService;
 
     @InjectMocks
     private ClientController clientController;
@@ -102,64 +90,5 @@ public class ClientControllerTest {
                 .andExpect(jsonPath("$.data[0]").value(expectedResponse.getData().get(0)));
     }
 
-    @Test
-    void testWhenGETActionsIsCalledThenAListOfClientActionsIsReturned() throws Exception {
 
-        ActionDTO actionDTO = ActionUtils.createFakeActionDTO();
-        var clientId = actionDTO.getClientId();
-        ClientDTO clientDTO = ClientUtils.createFakeClientDTO();
-        clientDTO.setId(clientId);
-        clientDTO.setPassword(null);
-
-        ResponseEntityDTO<ClientDTO> clientResponse = new ResponseEntityDTO<>();
-        clientResponse.setData(clientDTO);
-        when(clientService.findById(clientId)).thenReturn(clientResponse);
-
-        ResponseEntityDTO<List<ActionDTO>> expectedResponse = new ResponseEntityDTO<List<ActionDTO>>();
-        expectedResponse.setData(Arrays.asList(new ActionDTO[]{actionDTO}));
-        when(actionService.findByClientId(clientId,0,10)).thenReturn(expectedResponse);
-
-        mockMvc.perform(get(URL+"/"+clientId+"/actions"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0]").value(expectedResponse.getData().get(0)));
-    }
-
-    @Test
-    void testWhenGETActionsIsCalledForAbsentClientThenBadRequestShouldBeReturned() throws Exception {
-        var clientId = 1L;
-       when(clientService.findById(clientId)).thenThrow(EntityNotFoundException.class);
-
-        mockMvc.perform(get(URL+"/"+clientId+"/actions"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testWhenPOSTActionsIsCalledThenAListOfActionsIsAcquiredAndReturned() throws Exception {
-        ActionDTO actionDTO = ActionUtils.createFakeActionDTO();
-        var clientId = actionDTO.getClientId();
-        ClientDTO clientDTO = ClientUtils.createFakeClientDTO();
-        clientDTO.setId(clientId);
-        clientDTO.setPassword(null);
-        CompanyDTO companyDTO = CompanyUtils.createFakeCompanyDTO();
-        companyDTO.setId(actionDTO.getCompanyId());
-
-        var totalAmount = 10.0D;
-
-        ResponseEntityDTO<ClientDTO> clientResponse = new ResponseEntityDTO<>();
-        clientResponse.setData(clientDTO);
-        when(clientService.findById(clientId)).thenReturn(clientResponse);
-
-        List<CompanyDTO> companies = Arrays.asList(new CompanyDTO[]{companyDTO});
-        ResponseEntityDTO<List<CompanyDTO>> companiesResponse = new ResponseEntityDTO<>();
-        companiesResponse.setData(companies);
-        when(companyService.findByStatusActiveOrderByPriceAsc()).thenReturn(companiesResponse);
-
-        ActionsAcquiredResponseDTO expectedResponse = ActionsAcquiredResponseDTO.builder()
-                        .actionsAcquired(Arrays.asList(new ActionDTO[]{actionDTO})).build();
-        when(actionService.acquiredActions(totalAmount, clientDTO, companies)).thenReturn(expectedResponse);
-
-        mockMvc.perform(post(URL+"/"+clientId+"/actions?totalAmount="+totalAmount))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.actionsAcquired[0]").value(expectedResponse.getActionsAcquired().get(0)));
-    }
 }

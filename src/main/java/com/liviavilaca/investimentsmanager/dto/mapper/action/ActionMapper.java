@@ -13,12 +13,12 @@ public interface ActionMapper {
 
     @Mapping(source = "companyId", target = "company.id")
     @Mapping(source = "companyPrice", target = "company.price")
-    @Mapping(source = "clientId", target = "client.id")
+    @Mapping(source = "acquisitionId", target = "acquisition.id")
     Action toModel(ActionDTO actionDTO);
 
     @Mapping(source = "company.id", target = "companyId")
     @Mapping(source = "company.price", target = "companyPrice")
-    @Mapping(source = "client.id", target = "clientId")
+    @Mapping(source = "acquisition.id", target = "acquisitionId")
     ActionDTO toDTO(Action action);
 
 }

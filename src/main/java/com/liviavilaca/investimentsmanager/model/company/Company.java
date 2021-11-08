@@ -32,9 +32,9 @@ public class Company {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "company", targetEntity = Action.class, fetch = FetchType.LAZY,  orphanRemoval = true)
-    private List<Action> actions;
-
     @Column(columnDefinition = "boolean default true")
     private Boolean status;
+
+    //    @OneToMany(mappedBy = "company", targetEntity = Action.class, fetch = FetchType.LAZY,  orphanRemoval = true)
+//    private List<Action> actions;
 }
