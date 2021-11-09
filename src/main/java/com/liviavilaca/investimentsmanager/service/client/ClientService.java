@@ -8,6 +8,10 @@ import com.liviavilaca.investimentsmanager.exception.EntityNotFoundException;
 import com.liviavilaca.investimentsmanager.model.client.Client;
 import com.liviavilaca.investimentsmanager.repository.client.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +40,7 @@ public class ClientService {
         return response;
     }
 
+    @Cacheable(value = "clients", key="#id")
     public ResponseEntityDTO<ClientDTO> findById(Long id) throws EntityNotFoundException {
         Client client = this.clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Client.class, id));
         ResponseEntityDTO<ClientDTO> response = new ResponseEntityDTO<>();
@@ -43,6 +48,7 @@ public class ClientService {
         return response;
     }
 
+    @Cacheable(value = "authentication", key="#email")
     public ResponseEntityDTO<ClientDTO> findByEmail(String email) throws EntityNotFoundException {
         Client client = this.clientRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(Client.class));
         ResponseEntityDTO<ClientDTO> response = new ResponseEntityDTO<>();
@@ -60,6 +66,9 @@ public class ClientService {
         return listEntityResponseDTO;
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "authentication", allEntries = true),
+            @CacheEvict(value="clients", key="#id") })
     public MessageResponseDTO deleteById(Long id) throws EntityNotFoundException {
         try{
             this.clientRepository.deleteById(id);
@@ -69,6 +78,12 @@ public class ClientService {
         }
     }
 
+
+    @Caching(evict = {
+            @CacheEvict(value = "authentication", allEntries = true)},
+            put = {
+            @CachePut(value = "clients", key="#id")
+            })
     public ResponseEntityDTO<ClientDTO> update (Long id, ClientDTO companyDTO) throws EntityNotFoundException {
         Client client = clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Client.class, id));
         clientMapper.updateClientFromDTO(companyDTO, client);

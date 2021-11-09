@@ -8,6 +8,9 @@ import com.liviavilaca.investimentsmanager.exception.EntityNotFoundException;
 import com.liviavilaca.investimentsmanager.model.company.Company;
 import com.liviavilaca.investimentsmanager.repository.company.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +33,7 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
+    @CacheEvict(value = "companies", allEntries = true)
     public ResponseEntityDTO<CompanyDTO> create (CompanyDTO companyDTO){
         Company savedCompany = this.companyRepository.save(companyMapper.toModel(companyDTO));
         ResponseEntityDTO<CompanyDTO> response = new ResponseEntityDTO<>();
@@ -44,6 +48,7 @@ public class CompanyService {
         return response;
     }
 
+    @Cacheable("companies")
     public ResponseEntityDTO findByStatusActiveOrderByPriceAsc(){
         /**
          * TODO Pegar todas as páginas
@@ -57,7 +62,7 @@ public class CompanyService {
         return listEntityResponseDTO;
     }
 
-
+    @Cacheable("companies")
     public ResponseEntityDTO<List<CompanyDTO>> findAll(Boolean status, int page, int size){
         Pageable pageable =  PageRequest.of(page, size, Sort.by("price").descending());
         Page<Company> companies = status == null ? companyRepository.findAll(pageable) : companyRepository.findByStatus(status, pageable);
@@ -67,6 +72,7 @@ public class CompanyService {
         return listEntityResponseDTO;
     }
 
+    @CacheEvict(value = "companies", allEntries = true)
     public MessageResponseDTO deleteById (Long id) throws EntityNotFoundException {
         try{
             this.companyRepository.deleteById(id);
@@ -76,6 +82,7 @@ public class CompanyService {
         }
     }
 
+    @CacheEvict(value = "companies", allEntries = true)
     public ResponseEntityDTO<CompanyDTO> update (Long id, CompanyDTO companyDTO) throws EntityNotFoundException {
         Company company = companyRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Company.class, id));
         companyMapper.updateCompanyFromDTO(companyDTO, company);
