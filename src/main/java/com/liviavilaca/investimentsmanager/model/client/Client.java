@@ -41,8 +41,4 @@ public class Client {
 
     @OneToMany(mappedBy = "client", targetEntity = Acquisition.class, fetch = FetchType.LAZY,  orphanRemoval = true)
     private List<Acquisition> acquisitions;
-
-    public boolean isAdmin() {
-        return RoleEnum.ROLE_ADMIN.toString().equals(this.role.toString());
-    }
 }
