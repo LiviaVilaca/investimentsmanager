@@ -16,7 +16,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "Response")
 public class ResponseEntityDTO<T> {
-    private T data;
     private Long totalData;
+    private T data;
     private Object errors;
 }

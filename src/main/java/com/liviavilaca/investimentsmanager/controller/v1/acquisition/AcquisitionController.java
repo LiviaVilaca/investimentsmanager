@@ -46,9 +46,6 @@ public class AcquisitionController {
                                                                               @RequestParam(required = false) @ApiParam(value = "The total number of companies for which to acquire actions") Integer totalCompanies) throws EntityNotFoundException {
 
         ResponseEntityDTO<ClientDTO> clientResponse = this.clientService.findById(id);
-        /**
-         * TODO Carregar companies em memória
-         */
         List<CompanyDTO> activeCompanies = (List<CompanyDTO>) this.companyService.findByStatusActiveOrderByPriceAsc().getData();
 
         List<ActionDTO> actions;
