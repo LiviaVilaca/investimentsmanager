@@ -1,4 +1,4 @@
-INSERT INTO COMPANY (TICKER, NAME, PRICE) VALUES
+INSERT INTO COMPANY (NAME, TICKER, PRICE) VALUES
     ('Inter', 'BIDI11', 66.51),
     ('Magazine Luiza', 'MGLU3', 18.80),
     ('Sulamérica', 'SULA11', 28.26),
