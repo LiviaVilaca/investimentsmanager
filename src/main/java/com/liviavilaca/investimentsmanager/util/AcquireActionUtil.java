@@ -2,6 +2,7 @@ package com.liviavilaca.investimentsmanager.util;
 
 import com.liviavilaca.investimentsmanager.dto.model.action.ActionDTO;
 import com.liviavilaca.investimentsmanager.dto.model.company.CompanyDTO;
+import com.liviavilaca.investimentsmanager.exception.EntityNotFoundException;
 import com.liviavilaca.investimentsmanager.model.company.Company;
 import org.paukov.combinatorics3.Generator;
 
@@ -14,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class AcquireActionUtil {
 
-    public static List<ActionDTO> distributeActionsByCompanies(Double totalAmount, Integer totalCompaniesToInvest, List<CompanyDTO> activeCompanies){
+    public static List<ActionDTO> distributeActionsByCompanies(Double totalAmount, Integer totalCompaniesToInvest, List<CompanyDTO> activeCompanies) throws EntityNotFoundException {
         if(activeCompanies==null || activeCompanies.isEmpty())
-            return null;
+            throw new EntityNotFoundException(CompanyDTO.class);
 
         Integer totalCompanies = activeCompanies.size();
         if (totalCompaniesToInvest > totalCompanies) {
@@ -31,9 +32,9 @@ public class AcquireActionUtil {
         return createActions(bestActionsQuantity, activeCompanies);
     }
 
-    public static List<ActionDTO> distributeActionsByAllCompanies(Double totalAmount, List<CompanyDTO> activeCompanies){
+    public static List<ActionDTO> distributeActionsByAllCompanies(Double totalAmount, List<CompanyDTO> activeCompanies) throws EntityNotFoundException {
         if(activeCompanies==null || activeCompanies.isEmpty())
-            return null;
+            throw new EntityNotFoundException(CompanyDTO.class);
         HashMap<Long, Long> actionsQuantity = new HashMap<>();
         computeExchange(totalAmount, activeCompanies, actionsQuantity);
         return createActions(actionsQuantity, activeCompanies);

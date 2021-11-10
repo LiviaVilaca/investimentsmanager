@@ -50,14 +50,10 @@ public class CompanyService {
 
     @Cacheable("companies")
     public ResponseEntityDTO findByStatusActiveOrderByPriceAsc(){
-        /**
-         * TODO Pegar todas as páginas
-         */
-        Pageable pageable =  PageRequest.of(0, 100, Sort.by("price").ascending());
-        Page<Company> companies = companyRepository.findByStatus(true, pageable);
+        List<Company> companies = companyRepository.findByStatus(true, Sort.by("price").ascending());
         ResponseEntityDTO listEntityResponseDTO = ResponseEntityDTO.builder()
-                .totalData(companies.getTotalElements())
-                .data(companies.getContent().stream().map(companyMapper::toDTO).collect(Collectors.toList()))
+                .totalData(Long.valueOf(companies.size()))
+                .data(companies.stream().map(companyMapper::toDTO).collect(Collectors.toList()))
                 .build();
         return listEntityResponseDTO;
     }
