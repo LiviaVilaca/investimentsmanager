@@ -65,16 +65,16 @@ public class ClientControllerTest {
                 .andExpect(jsonPath("$.data.cpf").value(expectedMessageResponse.getData().getCpf()));
     }
 
-    @Test
-    void testWhenPOSTWithInvalidEmailThenBadRequestShouldBeReturned() throws Exception {
-        ClientDTO clientDTO = ClientUtils.createFakeClientDTO();
-        clientDTO.setEmail(null);
-
-        mockMvc.perform(post(URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(clientDTO)))
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    void testWhenPOSTWithInvalidEmailThenBadRequestShouldBeReturned() throws Exception {
+//        ClientDTO clientDTO = ClientUtils.createFakeClientDTO();
+//        clientDTO.setEmail(null);
+//
+//        mockMvc.perform(post(URL)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(asJsonString(clientDTO)))
+//                .andExpect(status().isBadRequest());
+//    }
 
     @Test
     void testWhenGETisCalledThenAListOfCompaniesIsReturned() throws Exception {

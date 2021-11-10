@@ -5,10 +5,13 @@ import com.liviavilaca.investimentsmanager.dto.response.MessageResponseDTO;
 import com.liviavilaca.investimentsmanager.dto.response.ResponseEntityDTO;
 import com.liviavilaca.investimentsmanager.exception.EntityNotFoundException;
 import com.liviavilaca.investimentsmanager.service.company.CompanyService;
+import com.liviavilaca.investimentsmanager.util.validation.ValidateOnInsert;
+import com.liviavilaca.investimentsmanager.util.validation.ValidateOnUpdate;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/companies")
+@Validated
 public class CompanyController {
 
     private CompanyService companyService;
@@ -25,6 +29,7 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
+    @Validated(ValidateOnInsert.class)
     @PostMapping
     @ApiOperation(value = "Route to create a Company in the API", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ResponseEntityDTO<CompanyDTO>> create (@Valid @RequestBody CompanyDTO company){
@@ -50,6 +55,7 @@ public class CompanyController {
         return new ResponseEntity<MessageResponseDTO>(this.companyService.deleteById(id), HttpStatus.OK);
     }
 
+    @Validated(ValidateOnUpdate.class)
     @PutMapping("/{id}")
     @ApiOperation(value = "Route to update a Company by Id in the API", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ResponseEntityDTO<CompanyDTO>> update (@PathVariable Long id, @RequestBody @Valid CompanyDTO company) throws EntityNotFoundException {
