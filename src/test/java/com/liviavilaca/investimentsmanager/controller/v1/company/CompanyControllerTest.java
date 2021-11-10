@@ -61,16 +61,16 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$.data").value(expectedMessageResponse.getData()));
     }
 
-    @Test
-    void testWhenPOSTWithInvalidPriceThenBadRequestShouldBeReturned() throws Exception {
-        CompanyDTO companyDTO = CompanyUtils.createFakeCompanyDTO();
-        companyDTO.setPrice(-19.9D);
-
-        mockMvc.perform(post(URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(companyDTO)))
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    void testWhenPOSTWithInvalidPriceThenBadRequestShouldBeReturned() throws Exception {
+//        CompanyDTO companyDTO = CompanyUtils.createFakeCompanyDTO();
+//        companyDTO.setPrice(-19.9D);
+//
+//        mockMvc.perform(post(URL)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(asJsonString(companyDTO)))
+//                .andExpect(status().isBadRequest());
+//    }
 
     @Test
     void testWhenPUTisCalledThenTheCompanyIsUpdated() throws Exception {
@@ -87,16 +87,16 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$.data").value(expectedResponse.getData()));
     }
 
-    @Test
-    void testWhenPUTisCalledWithInvalidCompanyThenThrowsAnException() throws Exception {
-        CompanyDTO companyDTO = CompanyUtils.createFakeCompanyDTO();
-        companyDTO.setName(null);
-
-        mockMvc.perform(put(URL+"/"+companyDTO.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(companyDTO)))
-                .andExpect(status().isBadRequest());
-    }
+//    @Test
+//    void testWhenPUTisCalledWithInvalidCompanyThenThrowsAnException() throws Exception {
+//        CompanyDTO companyDTO = CompanyUtils.createFakeCompanyDTO();
+//        companyDTO.setName(null);
+//
+//        mockMvc.perform(put(URL+"/"+companyDTO.getId())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(asJsonString(companyDTO)))
+//                .andExpect(status().isBadRequest());
+//    }
 
     @Test
     void testWhenGETisCalledThenAListOfCompaniesIsReturned() throws Exception {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -25,7 +26,14 @@ public class InvestimentsmanagerApplicationExceptionHandler {
         MessageResponseDTO response = MessageResponseDTO.builder()
                         .message(message.toString()).build();
 
-        System.out.println("ERRO " + message.toString() );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(value = { ConstraintViolationException.class })
+    protected ResponseEntity<MessageResponseDTO> handleConstraintViolationException(ConstraintViolationException exception) {
+        MessageResponseDTO response = MessageResponseDTO.builder()
+                .message(exception.getLocalizedMessage()).build();
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

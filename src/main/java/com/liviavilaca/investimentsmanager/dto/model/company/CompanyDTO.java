@@ -1,18 +1,15 @@
 package com.liviavilaca.investimentsmanager.dto.model.company;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.liviavilaca.investimentsmanager.util.validation.ValidateOnInsert;
+import com.liviavilaca.investimentsmanager.util.validation.ValidateOnUpdate;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
-import java.math.BigDecimal;
+import javax.validation.constraints.*;
 
 @Data
 @Builder
@@ -24,16 +21,20 @@ public class CompanyDTO {
 
     private Long id;
 
-    @NotBlank(message = "Ticker cannot be blank")
-    @Size(max= 200, message = "Ticker is too long. Only 10 characters are allowed")
+    @NotBlank(message = "Ticker cannot be blank", groups = {ValidateOnInsert.class})
+    @Size(max= 200, min=1, message = "Ticker is too long. Only 10 characters are allowed", groups = {ValidateOnInsert.class, ValidateOnUpdate.class})
+    @Pattern(regexp = "^.*[a-zA-Z].*$",
+            message = "Ticker invalid.", groups = {ValidateOnUpdate.class})
     private String ticker;
 
-    @NotBlank(message = "Name cannot be blank")
-    @Size(max= 200, message = "Name is too long. Only 200 characters are allowed")
+    @NotBlank(message = "Name cannot be blank", groups = {ValidateOnInsert.class})
+    @Size(max= 200, message = "Name is too long. Only 200 characters are allowed", groups = {ValidateOnInsert.class, ValidateOnUpdate.class})
+    @Pattern(regexp = "^.*[a-zA-Z].*$",
+            message = "Name invalid", groups = {ValidateOnUpdate.class})
     private String name;
 
-    @NotNull(message = "Price cannot be null")
-    @PositiveOrZero(message = "Price must be a positive value")
+    @NotNull(message = "Price cannot be null", groups = {ValidateOnInsert.class})
+    @PositiveOrZero(message = "Price must be a positive value", groups = {ValidateOnInsert.class, ValidateOnUpdate.class})
     private Double price;
 
     private Boolean status;
